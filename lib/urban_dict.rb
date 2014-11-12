@@ -27,15 +27,12 @@ module UrbanDict
 
     unless definitions.count > 0
       return { error: "No definition found for '#{ word }'." }
-      return
     end
 
     entry = definitions.first
 
     #puts entry["definition"]
     #puts "Example: #{ entry["example"]}"
-
-    return entry
   end
 
 end
