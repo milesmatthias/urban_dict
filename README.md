@@ -1,12 +1,12 @@
-# Urbandictionary
+# UrbanDict
 
-TODO: Write a gem description
+A simple ruby gem to look up word definitions on UrbanDictionary.com.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'urbandictionary'
+    gem 'urban_dict'
 
 And then execute:
 
@@ -18,7 +18,9 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```
+definition = UrbanDict.define("snapback")
+```
 
 ## Contributing
 
