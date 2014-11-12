@@ -5,34 +5,50 @@ require "json"
 
 module UrbanDict
 
-  ENDPOINT = "http://api.urbandictionary.com/v0/define"
+  class UrbanResponse
+    attr_accessor :uri
 
-  def self.define(word)
-
-    if word.nil?
-      exit "a word is required to define"
+    def initialize(url)
+      @uri = URI.parse(url)
     end
 
-    uri = URI.parse( [ENDPOINT, "?term=", word].join )
+    def get_response
+      response = Net::HTTP.get_response(@uri)
 
-    response = Net::HTTP.get_response(uri)
+      unless response.code == "200"
+        return { error: "There was a problem using the urban dictionary endpoint. Response code = #{ response.code }" }
+      end
 
-    unless response.code == "200"
-      return { error: "There was a problem using the urban dictionary endpoint. Response code = #{ response.code }" }
+      body = JSON.parse(response.body)
+
+      definitions = body["list"]
+
+      unless definitions.count > 0
+        return { error: "No definition found for '#{ word }'." }
+      end
+
+      entry = definitions.first
+
+      #puts entry["definition"]
+      #puts "Example: #{ entry["example"]}"
     end
-
-    body = JSON.parse(response.body)
-
-    definitions = body["list"]
-
-    unless definitions.count > 0
-      return { error: "No definition found for '#{ word }'." }
-    end
-
-    entry = definitions.first
-
-    #puts entry["definition"]
-    #puts "Example: #{ entry["example"]}"
   end
+
+
+  #
+    ENDPOINT = "http://api.urbandictionary.com/v0/"
+
+    def self.define(word = nil)
+      if word.nil?
+        random
+      else
+        UrbanResponse.new( [ENDPOINT, "define?term=", word].join ).get_response
+      end
+    end
+
+    def self.random
+      UrbanResponse.new( [ENDPOINT, "random"].join ).get_response
+    end
+
 
 end
